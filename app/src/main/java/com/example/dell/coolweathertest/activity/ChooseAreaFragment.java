@@ -4,6 +4,7 @@ package com.example.dell.coolweathertest.activity;
 // 因为它可以让碎片在所有的Android版本中保持功能一致性）
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -100,7 +101,17 @@ public class ChooseAreaFragment extends Fragment {
                 } else if(currentLevel == LEVEL_COUNTY) {
                     //如果当前级别为LEVEL_COUNTY 则启动WeatherActivity 并把当前选中的县的天气id传递过去
                     String weatherId = countyList.get (position).getWeatherId ();
-                    if(getActivity () instanceof  MainActivity)
+                    if(getActivity () instanceof  MainActivity) {
+                        Intent intent = new Intent (getActivity (), WeatherAcitivity.class);
+                        intent.putExtra ("weather_id", weatherId);
+                        startActivity (intent);
+                        getActivity ().finish ();
+                    } else if(getActivity () instanceof WeatherAcitivity) {
+                        WeatherAcitivity acitivity = (WeatherAcitivity) getActivity ();
+                        acitivity.drawerLayout.closeDrawers ();//关闭滑动菜单
+                        acitivity.swipeRefresh.setRefreshing (true);//显示下拉刷新进度条
+                        acitivity.requestWeather (weatherId);//请求城市天气信息
+                    }
                 }
             }
         });

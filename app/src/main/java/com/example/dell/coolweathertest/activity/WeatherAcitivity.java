@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.example.dell.coolweathertest.R;
 import com.example.dell.coolweathertest.gson.Forecast;
 import com.example.dell.coolweathertest.gson.Weather;
+import com.example.dell.coolweathertest.service.AutoUpdateService;
 import com.example.dell.coolweathertest.util.HttpUtils;
 import com.example.dell.coolweathertest.util.Utility;
 
@@ -193,6 +195,7 @@ public class WeatherAcitivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 drawerLayout.openDrawer (GravityCompat.START);
+                Log.i ("info","hello");
             }
         });
     }
@@ -298,9 +301,9 @@ public class WeatherAcitivity extends AppCompatActivity {
         String presInfo = weather.now.pres + "Pa";
         String degree = weather.now.temperature + "℃";
         String visInfo = weather.now.vis;
-        String dirInfo = weather.now.wind.dir;
-        String scInfo = weather.now.wind.sc;
-        String spdInfo = weather.now.wind.spd + "m/s";
+//        String dirInfo = weather.now.wind.dir;
+//        String scInfo = weather.now.wind.sc;
+//        String spdInfo = weather.now.wind.spd + "m/s";
         weatherInfoText.setText (weatherInfo);
         flText.setText (flInfo);
         humText.setText (humInfo);
@@ -308,9 +311,9 @@ public class WeatherAcitivity extends AppCompatActivity {
         presText.setText (presInfo);
         degreeText.setText (degree);
         visText.setText (visInfo);
-        dirText.setText (dirInfo);
-        scText.setText (scInfo);
-        spdText.setText (spdInfo);
+//        dirText.setText (dirInfo);
+//        scText.setText (scInfo);
+//        spdText.setText (spdInfo);
         forecastLayout.removeAllViews ();
         for (Forecast forecast : weather.forecastList) {
             View view = LayoutInflater.from (this).inflate (R.layout.forecast_item, forecastLayout, false);
@@ -324,8 +327,8 @@ public class WeatherAcitivity extends AppCompatActivity {
             infoText.setText (forecast.more.info);
             maxText.setText (forecast.temperature.max);
             minText.setText (forecast.temperature.min);
-            dirText.setText (forecast.wind.dir);
-            scText.setText (forecast.wind.sc);
+//            dirText.setText (forecast.wind.dir);
+//            scText.setText (forecast.wind.sc);
             forecastLayout.addView (view);
         }
 
@@ -340,28 +343,28 @@ public class WeatherAcitivity extends AppCompatActivity {
             so2Text.setText (weather.aqi.city.so2);
         }
 
-        String air = "空气质量:" + weather.suggestion.air.info;
+//        String air = "空气质量:" + weather.suggestion.air.info;
         String comfort = "舒适度:" + weather.suggestion.comfort.info;
         String carWash = "洗车指数:" + weather.suggestion.carWash.info;
-        String drsg = "穿衣指数:" + weather.suggestion.drsg.info;
-        String flu = "感冒指数:" + weather.suggestion.flu.info;
+//        String drsg = "穿衣指数:" + weather.suggestion.drsg.info;
+//        String flu = "感冒指数:" + weather.suggestion.flu.info;
         String sport = "运动建议:" + weather.suggestion.sport.info;
-        String trav = "旅游指数:" + weather.suggestion.trav.info;
-        String uv = "紫外线指数:" + weather.suggestion.uv.info;
-        airText.setText (air);
+//        String trav = "旅游指数:" + weather.suggestion.trav.info;
+//        String uv = "紫外线指数:" + weather.suggestion.uv.info;
+//        airText.setText (air);
         comfortText.setText (comfort);
         carWashText.setText (carWash);
-        drsgText.setText (drsg);
-        fluText.setText (flu);
+//        drsgText.setText (drsg);
+//        fluText.setText (flu);
         sportText.setText (sport);
-        travText.setText (trav);
-        uvText.setText (uv);
+//        travText.setText (trav);
+//        uvText.setText (uv);
         //在设置完所有数据后，再将ScrollView设为可见
         weatherLayout.setVisibility (View.VISIBLE);
         //激活AutoUpdateService这个服务，只要选中了某个城市并成功更新天气之后，
         // AutoUpdateService就会一直在后台运行，并保证每8个小时更新一次天气.
 
-        //Intent intent = new Intent (this, AutoUpdateService.class);
-        //startService (intent);
+        Intent intent = new Intent (this, AutoUpdateService.class);
+        startService (intent);
     }
 }
